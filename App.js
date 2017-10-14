@@ -11,6 +11,8 @@ import {
     Text,
     Button,
     View,
+    Image,
+    ListView,
     ToastAndroid
 } from 'react-native';
 
@@ -20,27 +22,42 @@ const instructions = Platform.select({
     android: 'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
-
+const users = [
+    {username: 'Jerry', age: 21, gender: 'male'},
+    {username: 'Tomy', age: 22, gender: 'male'},
+    {username: 'Lily', age: 19, gender: 'female'},
+    {username: 'Lucy', age: 20, gender: 'female'}
+]
 
 export default class App extends Component<{}> {
-    constructor(height, width) {
-        super();
-        // this.getGanks()
+    constructor(props) {
+        super(props);
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+            dataSource: ds,
+            data: users
+        }
+    }
+
+    renderRow(rowData, rowId) {
+        return (
+            <View>
+                <Image style={{height: 100}}
+                       source={{uri: 'https://3-im.guokr.com/K1PDb1grObTa5cJGixvYJ5ZZaNICouqSBceOuiY7wQXtAAAAewAAAFBO.png'}}/>
+                <Text>{rowData.username + '  ' + rowId}</Text>
+            </View>
+        )
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    你好啊!
-                </Text>
-                <Text style={styles.instructions}>
-                    To get started, edit App.js
-                </Text>
-                <Text style={styles.instructions}>
-                    {instructions}
-                </Text>
-                <Button title="天气" onPress={(s)=>ToastAndroid.show(s.title, ToastAndroid.LONG)
+                <ListView style={{marginTop: 20}}
+                          dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
+                          renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
+                          showsVerticalScrollIndicator={false}
+                />
+                <Button title="天气" onPress={(s) => ToastAndroid.show(s.title, ToastAndroid.LONG)
                 }/>
             </View>
         );
