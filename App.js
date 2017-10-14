@@ -16,18 +16,14 @@ import {
     ToastAndroid
 } from 'react-native';
 
+import NetUtil from './NetUtil.js'
+
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' +
     'Cmd+D or shake for dev menu',
     android: 'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
-const users = [
-    {username: 'Jerry', age: 21, gender: 'male'},
-    {username: 'Tomy', age: 22, gender: 'male'},
-    {username: 'Lily', age: 19, gender: 'female'},
-    {username: 'Lucy', age: 20, gender: 'female'}
-]
 
 export default class App extends Component<{}> {
     constructor(props) {
@@ -35,40 +31,41 @@ export default class App extends Component<{}> {
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds,
-            data: users
+            data: [],
+            btnStr: "加载"
         }
     }
 
     renderRow(rowData, rowId) {
         return (
             <View>
-                <Image style={{height: 100}}
-                       source={{uri: 'https://3-im.guokr.com/K1PDb1grObTa5cJGixvYJ5ZZaNICouqSBceOuiY7wQXtAAAAewAAAFBO.png'}}/>
-                <Text>{rowData.username + '  ' + rowId}</Text>
+                {/*<Image style={{height: 100}}*/}
+                {/*source={{uri: rowData.images[0]}}/>*/}
+                <Text>{rowData.desc + '  ' + rowData.who}</Text>
             </View>
         )
     }
 
     render() {
         return (
+
             <View style={styles.container}>
+                <Button  title={this.state.btnStr} style={{width:60,marginTop: 40}} onPress={() => this.getGanks()}/>
                 <ListView style={{marginTop: 20}}
                           dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
                           renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
                           showsVerticalScrollIndicator={false}
                 />
-                <Button title="天气" onPress={(s) => ToastAndroid.show(s.title, ToastAndroid.LONG)
-                }/>
             </View>
         );
     }
 
     getGanks() {
-        // this.login(str =>
-        // this.setState({
-        //     toastMessage: "厉害的",
-        //     open: true,
-        // })//)
+        NetUtil.get('http://gank.io/api/data/Android/10/1', obj => this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(obj.results),
+            data: obj.results,
+            btnStr: '完成'
+        }))
     }
 
     _handleRequestClose() {
