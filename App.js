@@ -3,20 +3,20 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-
 import React, {Component} from 'react';
 import {
     Platform,
     StyleSheet,
     Text,
-    Button,
     View,
+    Button,
     Image,
     ListView,
     ToastAndroid
 } from 'react-native';
-
+// import { Card } from 'react-native-material-design';
 import NetUtil from './NetUtil.js'
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' +
@@ -24,6 +24,7 @@ const instructions = Platform.select({
     android: 'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
+
 
 export default class App extends Component<{}> {
     constructor(props) {
@@ -50,7 +51,8 @@ export default class App extends Component<{}> {
         return (
 
             <View style={styles.container}>
-                <Button  title={this.state.btnStr} style={{width:60,marginTop: 40}} onPress={() => this.getGanks()}/>
+                {/*<Button value={this.state.btnStr} onPress={()=> this.getGanks()} />*/}
+                <Button title={this.state.btnStr} style={{width: 60, marginTop: 40}} onPress={() => this.getGanks()}/>
                 <ListView style={{marginTop: 20}}
                           dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
                           renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
