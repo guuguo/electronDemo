@@ -52,12 +52,8 @@ class NetUtil extends React.Component {
      *url :请求地址
      *callback:回调函数
      */
-    static  get(url, callback) {
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                callback(JSON.parse(responseText));
-            }).done();
+    static  get(url) {
+      return  fetch(url).then((response) => response.text())
     }
 
 }
