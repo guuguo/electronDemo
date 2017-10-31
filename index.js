@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from './App.js';
+import App from './app/app.js';
 
 AppRegistry.registerComponent('gankdemo', () => App);
