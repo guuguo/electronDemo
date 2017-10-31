@@ -12,18 +12,14 @@ import {
     Button,
     Image,
     ListView,
-    ToastAndroid, log
+    ToastAndroid,
+    RefreshControl
 } from 'react-native';
 // import { Card } from 'react-native-material-design';
 import NetUtil from './NetUtil.js'
-// import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import LoadMoreFooter from './LoadMoreFooter.js'
 
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+// import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 const gankType = {
     FuLi: "福利",
@@ -34,7 +30,22 @@ const gankType = {
     front: "前端",
     all: "all"
 }
+const datePattern = '2005-12-15T09:41:30.217Z'
+
 export default class App extends Component<{}> {
+    constructor(props) {
+        super(props);
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+            page: 1,
+            dataSource: ds,
+            data: [],
+            btnStr: "加载"
+        }
+        this.setState.page = 1;
+        this.getGanks(this.setState.page)
+    }
+
     parseMyDate(str) {
         var st = "2005-12-15T09:41:30.217Z";
         var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})Z/;
@@ -72,17 +83,6 @@ export default class App extends Component<{}> {
         return timeSpan.toString() + "年前"
     }
 
-    constructor(props) {
-        super(props);
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.state = {
-            page: 1,
-            dataSource: ds,
-            data: [],
-        };
-        this.getGanks(this.state.page)
-    }
-
     renderRow(rowData, rowId) {
         return (
             <View style={{alignItems: 'center', justifyContent: 'center', height: 220}}>
@@ -104,10 +104,7 @@ export default class App extends Component<{}> {
 
     render() {
         return (
-
             <View style={styles.container}>
-                {/*<Button value={this.state.btnStr} onPress={()=> this.getGanks()} />*/}
-                {/*<Button title={this.state.btnStr} style={{width: 60, margin: 40}} onPress={() => this.getGanks()}/>*/}
                 <ListView
                     dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
                     renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
@@ -115,41 +112,48 @@ export default class App extends Component<{}> {
                     enableEmptySections={true}
                     onEndReached={this._toEnd.bind(this)}
                     onEndReachedThreshold={20}
+                    /* refreshControl={
+                         <RefreshControl
+                             refreshing={ reducer.isRefreshing }
+                             onRefresh={ this._onRefresh.bind(this) }
+                             tintColor="gray"
+                             colors={['#ff0000', '#00ff00', '#0000ff']}
+                             progressBackgroundColor="gray"/>
+                     }*//>
                 />
             </View>
         );
     }
 
-    _toEnd() {
-        ToastAndroid.show('到底部了', ToastAndroid.SHORT);
-        this.setState((preState, props) =>{page: preState.page + 1});
-        // this.setState({page:this.state.page+1});
 
-        this.getGanks(this.state.page)
+    _toEnd() {
+        ToastAndroid.show('到底部了', ToastAndroid.SHORT)
+        this.setState.page++;
+        this.getGanks(this.setState.page)
     }
 
     getGanks(page) {
-        var p1 = this.getApiGanks(gankType.FuLi, page);
-        var p2 = this.getApiGanks(gankType.rest, page);
+        var p1 = this.getApiGanks(gankType.FuLi, page)
+        var p2 = this.getApiGanks(gankType.rest, page)
         Promise.all([p1, p2])
             .then(
                 lists => {
-                    var list1 = JSON.parse(lists[0]).results;
-                    var list2 = JSON.parse(lists[1]).results;
-                    var listRes = [];
+                    var list1 = JSON.parse(lists[0]).results
+                    var list2 = JSON.parse(lists[1]).results
+                    var listRes = []
                     list1.forEach((v, i) => {
                         var p2Bean = list2[i];
                         v.desc = p2Bean.desc;
-                        v.who = p2Bean.who;
+                        v.who = p2Bean.who
                         listRes.push(v)
-                    });
+                    })
                     return list1
                 })
             .then(
                 list => {
                     if (page === 1)
                         this.setState.data = [];
-                    var tempList = this.state.data.concat(list);
+                    var tempList=this.state.data.concat(list);
                     this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(tempList),
                         data: tempList,
@@ -161,12 +165,6 @@ export default class App extends Component<{}> {
     getApiGanks(type, page) {
         return NetUtil.get('http://gank.io/api/data/' + type + '/20/' + page)
     }
-
-    _handleRequestClose() {
-        this.setState({
-            open: false,
-        });
-    };
 
 }
 
