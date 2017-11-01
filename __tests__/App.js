@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import App from '../app/components/gankListScreen';
+import App from '../app/screens/gankListScreen';
 
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';

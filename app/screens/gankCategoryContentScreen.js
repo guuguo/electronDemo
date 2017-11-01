@@ -16,7 +16,7 @@ import {
     ToastAndroid, log
 } from 'react-native';
 // import { Card } from 'react-native-material-design';
-import LoadMoreFooter from '../loadMoreFooter.js'
+import LoadMoreFooter from '../components/loadMoreFooter.js'
 import NetUtil from "../utils/NetUtil";
 import StringUtil from "../utils/StringUtil";
 
