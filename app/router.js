@@ -3,17 +3,10 @@ import {TabNavigator, StackNavigator, TabView, TabBarBottom} from 'react-navigat
 import {NavigationComponent} from 'react-native-material-bottom-navigation'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import GankListScreen from './screens/gankListScreen.js'
-import MainScreen from './screens/MainScreen.js'
+import MainScreen from './app.js'
 import GankDailyScreen from './screens/gankDailyScreen.js'
 import GankCategoryTabScreen from './screens/gankCategoryTabScreen.js'
 
-
-export const ScreenStack = StackNavigator({
-    GankDaily: {
-        screen: GankDailyScreen,
-    },
-
-});
 
 export const Tabs = TabNavigator(
     {
@@ -51,14 +44,13 @@ export const Tabs = TabNavigator(
                     right: 0
                 },
                 backgroundColor: '#F2F2F2',
-                // tabs: {
-                //     GankList: {
-                //         barBackgroundColor: '#F2F2F2'
-                //     },
-                //     GankCategoryTab: {
-                //         barBackgroundColor: '#F2F2F2'
-                //     },
-                // }
             }
         }
     });
+
+
+export const ScreenStack = StackNavigator({
+    TabA: {screen: Tabs},
+    GankDaily: {screen: GankDailyScreen},
+
+});

@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StatusBar, ToastAndroid} from 'react-native';
 // import {createStore, applyMiddleware, combineReducers} from 'redux';
-import {Tabs} from './../router.js';
-import GankListScreen from './gankListScreen.js';
+import {ScreenStack,Tabs} from './router.js';
 
 export default class MainScreen extends Component<{}> {
 
@@ -12,7 +11,7 @@ export default class MainScreen extends Component<{}> {
                 style={{flex: 1}}>
                 <StatusBar backgroundColor="#393B40"
                            barStyle="light-content"/>
-                <Tabs/>
+                <ScreenStack/>
             </View>
         );
     }
