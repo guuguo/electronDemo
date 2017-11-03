@@ -48,9 +48,9 @@ export default class gankListScreen extends Component<{}> {
 
     renderRow(rowData, rowId) {
         return (
-            <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center', height: 220}}
+            <TouchableOpacity activeOpacity={1}  style={{alignItems: 'center', justifyContent: 'center', height: 220}}
                               onPress={() => {
-                                  this.props.navigation.navigate('GankDaily', {name: 'Lucy'})
+                                  this.props.navigation.navigate('GankDaily', {gankBean: rowData})
                               }}>
                 <View
                     style={{height: 1, position: 'absolute', bottom: 0, right: 0, left: 0, backgroundColor: 'black'}}/>
@@ -137,15 +137,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
     },
 });
