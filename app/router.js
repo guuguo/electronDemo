@@ -64,6 +64,9 @@ export const ScreenStack = StackNavigator({
     },
     GankDaily: {
         screen: GankDailyScreen,
+        navigationOptions: {
+            header: null,
+        }
     },
 
 });

@@ -5,17 +5,16 @@
  */
 import React, {Component} from 'react';
 import {
-    Platform,
     StyleSheet,
     Text,
+    PixelRatio,
     View,
-    Button,
     Image,
     TouchableOpacity,
     ListView,
-    StatusBar,
-    ToastAndroid, log
 } from 'react-native';
+import {Divider} from 'react-native-elements'
+
 // import { Card } from 'react-native-material-design';
 import LoadMoreFooter from '../components/loadMoreFooter.js'
 import NetUtil from "../utils/NetUtil";
@@ -26,11 +25,13 @@ const gankType = {
     Android: "Android",
     iOS: "iOS",
     rest: "休息视频",
-    wxpand: "拓展资源",
+    expand: "拓展资源",
     front: "前端",
     all: "all"
 };
 const FETCH_COUNT = 20;
+const onePx = 1 / PixelRatio.get()
+
 export default class gankListScreen extends Component<{}> {
 
 
@@ -48,16 +49,24 @@ export default class gankListScreen extends Component<{}> {
 
     renderRow(rowData, rowId) {
         return (
-            <TouchableOpacity activeOpacity={1}  style={{alignItems: 'center', justifyContent: 'center', height: 220}}
+            <TouchableOpacity activeOpacity={1} style={{alignItems: 'center', justifyContent: 'center', height: 220}}
                               onPress={() => {
                                   this.props.navigation.navigate('GankDaily', {gankBean: rowData})
                               }}>
                 <View
-                    style={{height: 1, position: 'absolute', bottom: 0, right: 0, left: 0, backgroundColor: 'black'}}/>
-                <Image style={{position: 'absolute', left: 0, top: 0, bottom: 1, right: 0}}
+                    style={{
+                        height: onePx,
+                        position: 'absolute',
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        backgroundColor: 'black'
+                    }}/>
+
+                <Image style={{position: 'absolute', left: 0, top: 0, bottom: onePx, right: 0}}
                        source={{uri: rowData.url}}/>
                 <View style={{
-                    position: 'absolute', left: 0, right: 0, bottom: 1, top: 0, backgroundColor: 'rgba(0,0,0,0.15)'
+                    position: 'absolute', left: 0, right: 0, bottom: onePx, top: 0, backgroundColor: 'rgba(0,0,0,0.15)'
                 }}/>
                 <Text style={{
                     color: 'white', fontSize: 27, fontWeight: 'bold', textAlign: 'center'

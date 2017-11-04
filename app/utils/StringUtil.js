@@ -12,6 +12,10 @@ class StringUtil extends React.Component {
         var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})Z/;
         return str.replace(pattern, '$1/$2/$3 $4:$5:$6')
     }
+    static parseRequestDate(str) {
+        var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})Z/;
+        return str.replace(pattern, '$1/$2/$3')
+    }
     /**
      * 得到该该时间距今多久以前
      * @param 时间戳
