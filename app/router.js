@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {TouchableNativeFeedback,} from 'react-native';
 
-import {TabNavigator, StackNavigator, TabView, TabBarBottom} from 'react-navigation';
+import {TabNavigator, StackNavigator,} from 'react-navigation';
 import {NavigationComponent} from 'react-native-material-bottom-navigation'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Icon} from 'react-native-elements'
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
+
 import GankListScreen from './screens/gankListScreen.js'
 import GankDailyScreen from './screens/gankDailyScreen.js'
 import GankCategoryTabScreen from './screens/gankCategoryTabScreen.js'
+import GankWebScreen from './screens/gankWebScreen.js'
+
 // import GankTabScreen from "./screens/mainTabScreen";
 
 
@@ -47,11 +51,17 @@ export const Tabs = TabNavigator(
     });
 
 
-
 export const ScreenStack = StackNavigator({
     TabScreen: {
         screen: Tabs,
         navigationOptions: {
+            headerRight:
+                <TouchableNativeFeedback
+                    background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+                    onPress={() => {
+                    }}>
+                    <Icon name="search" style={{marginRight: 10, padding: 4}} size={25} color='white'/>
+                </TouchableNativeFeedback>,
             headerTitle: 'Gank',
             headerStyle: {backgroundColor: '#393B40'},//导航栏的样式
             headerTitleStyle: {//导航栏文字的样式
@@ -68,5 +78,10 @@ export const ScreenStack = StackNavigator({
             header: null,
         }
     },
-
-});
+    GankWeb: {
+        screen: GankWebScreen,
+        navigationOptions: {
+            header: null,
+        }
+    },
+},);

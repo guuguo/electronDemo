@@ -11,14 +11,13 @@ import {
     ScrollView,
     View,
     Dimensions,
-    Image
+    Image,
+    ToastAndroid,
+    TouchableNativeFeedback
 } from 'react-native';
-import {Icon,  Divider} from 'react-native-elements'
+import {Icon, Divider} from 'react-native-elements'
 import StringUtil from "../utils/StringUtil";
 import NetUtil from "../utils/NetUtil.js";
-
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-
 
 export const deviceWidth = Dimensions.get('window').width;      //设备的宽度
 export const deviceHeight = Dimensions.get('window').height;    //设备的高度
@@ -42,7 +41,7 @@ export default class gankDailyScreen extends Component<{}> {
 
     _renderCategory(category) {
         return (
-            <View style={styles.container}>
+            <View key={category.name} style={styles.container}>
                 <Text style={{
                     color: 'black', fontWeight: 'bold', fontSize: 23, margin: 10, backgroundColor: '#f2f2f2'
                 }}>{category.name}</Text>
@@ -54,50 +53,63 @@ export default class gankDailyScreen extends Component<{}> {
 
     _renderGankRow(gankBean) {
         return (
-            <View>
-                <View style={{backgroundColor: 'white', flexDirection: 'row', justifyContent: 'center', height: 80}}>
-                    <Text style={{
-                        flex: 1, color: 'black', fontSize: 14, margin: 10
-                    }}>{gankBean.desc}</Text>
-                    {
-                        gankBean.images !== undefined && gankBean.images.length > 0 ?
-                            <Image style={{margin: 8, width: 80}} source={{uri: gankBean.images[0]}}/> : <View/>
-                    }
+            <TouchableNativeFeedback
+                key={gankBean._id} background={TouchableNativeFeedback.SelectableBackground()}
+                onPress={() => {
+                    this.props.navigation.navigate('GankWeb', {gankBean: gankBean})
+                }}>
+                <View style={{backgroundColor: 'white'}}>
+                    <View style={{flexDirection: 'row', justifyContent: 'center', height: 80}}>
+                        <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
+                            <Text numberOfLines={2} style={{color: 'black', fontSize: 14}}>{gankBean.desc}</Text>
+                            <Text style={{
+                                flex: 2, color: '#808084', fontSize: 12, marginTop: 10
+                            }}>{gankBean.who + ' • ' + StringUtil.getPublishedTimeSpan(gankBean.publishedAt)}</Text>
+                        </View>
+                        {
+                            gankBean.images !== undefined && gankBean.images.length > 0 ?
+                                <Image style={{margin: 8, width: 80}} source={{uri: gankBean.images[0]}}/> : <View/>
+                        }
+                    </View>
+                    <Divider style={{height: onePx, backgroundColor: '#cecece'}}/>
                 </View>
-                <Divider style={{height: onePx, backgroundColor: '#cecece'}}/>
-            </View>
+            </TouchableNativeFeedback>
         )
     }
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <Image source={{uri: this.gankBean.url}}
-                           style={{height: this.state.height * deviceWidth / this.state.width}}/>
-                    <Icon
-                        raised
-                        underlayColor={'red'}
-                        style={{
-                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                            borderRadius: 25,
-                            padding: 6,
-                            marginLeft: 15,
-                            marginTop: 10,
-                            position: 'absolute'
-                        }} name="arrow-back" size={30}
-                        color={'white'}
-                        onPress={() => {
-                            this.props.navigation.goBack()
-                        }}/>
-                    {this.state.data.map(it => this._renderCategory(it))}
-                </View>
-            </ScrollView>
+            <View style={{flex: 1, alignItems: 'stretch'}}>
+                <ScrollView>
+                    <View style={styles.container}>
+                        <Image source={{uri: this.gankBean.url}}
+                               style={{height: this.state.height * deviceWidth / this.state.width}}/>
+
+                        {this.state.data.map(it => this._renderCategory(it))}
+                    </View>
+                </ScrollView>
+                <Icon
+                    raised
+                    underlayColor={'red'}
+                    style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                        borderRadius: 25,
+                        padding: 6,
+                        marginLeft: 12,
+                        marginTop: 10,
+                        position: 'absolute'
+                    }} name="arrow-back" size={30}
+                    color={'white'}
+                    onPress={() => {
+                        this.props.navigation.goBack()
+                    }}/>
+            </View>
         );
     }
 
     _getDailyGanks(date) {
-        var p1 = this._getApiDailyGanks(date).then(res => JSON.parse(res).results)
+        var p1 = this._getApiDailyGanks(date)
+            .then(res => JSON.parse(res).results)
             .then(daily => {
                 var categories = []
                 this._pushData(daily.休息视频, '休息视频', categories)

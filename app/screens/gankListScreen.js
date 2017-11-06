@@ -19,6 +19,8 @@ import {Divider} from 'react-native-elements'
 import LoadMoreFooter from '../components/loadMoreFooter.js'
 import NetUtil from "../utils/NetUtil";
 import StringUtil from "../utils/StringUtil";
+import {Icon} from 'react-native-elements'
+
 
 const gankType = {
     FuLi: "福利",
@@ -51,17 +53,11 @@ export default class gankListScreen extends Component<{}> {
         return (
             <TouchableOpacity activeOpacity={1} style={{alignItems: 'center', justifyContent: 'center', height: 220}}
                               onPress={() => {
-                                  this.props.navigation.navigate('GankDaily', {gankBean: rowData})
+                                  this.props.navigation.navigate('GankDaily', {gankBean: rowData,transition:'forFadeFromBottom'})
                               }}>
-                <View
-                    style={{
-                        height: onePx,
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        left: 0,
-                        backgroundColor: 'black'
-                    }}/>
+                <View style={{
+                    height: onePx, position: 'absolute', bottom: 0, right: 0, left: 0, backgroundColor: 'black'
+                }}/>
 
                 <Image style={{position: 'absolute', left: 0, top: 0, bottom: onePx, right: 0}}
                        source={{uri: rowData.url}}/>
@@ -70,7 +66,7 @@ export default class gankListScreen extends Component<{}> {
                 }}/>
                 <Text style={{
                     color: 'white', fontSize: 27, fontWeight: 'bold', textAlign: 'center'
-                }}>{rowData.who + ' • ' + StringUtil.getTimeSpan(new Date(StringUtil.parseMyDate(rowData.publishedAt)).getTime())}</Text>
+                }}>{rowData.who + ' • ' + StringUtil.getPublishedTimeSpan(rowData.publishedAt)}</Text>
                 <Text style={{
                     margin: 10, color: 'white', fontSize: 16, textAlign: 'center'
                 }}>{rowData.desc}</Text>

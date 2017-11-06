@@ -9,13 +9,15 @@ class StringUtil extends React.Component {
      * @returns {*|Date}
      */
     static parseMyDate(str) {
-        var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})Z/;
+        var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d+)Z/;
         return str.replace(pattern, '$1/$2/$3 $4:$5:$6')
     }
+
     static parseRequestDate(str) {
-        var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})Z/;
+        var pattern = /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d+)Z/;
         return str.replace(pattern, '$1/$2/$3')
     }
+
     /**
      * 得到该该时间距今多久以前
      * @param 时间戳
@@ -50,6 +52,10 @@ class StringUtil extends React.Component {
         timeSpan /= 12
         timeSpan = parseInt(timeSpan)
         return timeSpan.toString() + "年前"
+    }
+
+    static getPublishedTimeSpan(timeStr): String {
+        return StringUtil.getTimeSpan(new Date(StringUtil.parseMyDate(timeStr)).getTime())
     }
 }
 
