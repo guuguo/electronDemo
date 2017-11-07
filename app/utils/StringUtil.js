@@ -1,5 +1,8 @@
 'use strict';
 import React, {Component} from 'react';
+import {
+    PixelRatio,
+} from 'react-native';
 
 class StringUtil extends React.Component {
 

@@ -24,9 +24,8 @@ import NetUtil from "../utils/NetUtil.js";
 
 export const deviceWidth = Dimensions.get('window').width;      //设备的宽度
 export const deviceHeight = Dimensions.get('window').height;    //设备的高度
-const onePx = 1 / PixelRatio.get()
 const WEB_VIEW_REF = 'WEB_VIEW'
-export default class gankDailyScreen extends Component<{}> {
+export default class GankDailyScreen extends Component<{}> {
 
 
     constructor(props) {

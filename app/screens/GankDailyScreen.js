@@ -18,11 +18,13 @@ import {
 import {Icon, Divider} from 'react-native-elements'
 import StringUtil from "../utils/StringUtil";
 import NetUtil from "../utils/NetUtil.js";
+import GankItemRow from "../components/GankItemRow"
+
 
 export const deviceWidth = Dimensions.get('window').width;      //设备的宽度
 export const deviceHeight = Dimensions.get('window').height;    //设备的高度
 const onePx = 1 / PixelRatio.get()
-export default class gankDailyScreen extends Component<{}> {
+export default class GankDailyScreen extends Component<{}> {
 
 
     constructor(props) {
@@ -46,37 +48,10 @@ export default class gankDailyScreen extends Component<{}> {
                     color: 'black', fontWeight: 'bold', fontSize: 23, margin: 10, backgroundColor: '#f2f2f2'
                 }}>{category.name}</Text>
                 <Divider style={{height: onePx, backgroundColor: '#cecece'}}/>
-                {category.data.map(it => this._renderGankRow(it))}
+                {category.data.map(it => <GankItemRow gankBean={it} navigation={this.props.navigation}/>)}
             </View>
         )
     }
-
-    _renderGankRow(gankBean) {
-        return (
-            <TouchableNativeFeedback
-                key={gankBean._id} background={TouchableNativeFeedback.SelectableBackground()}
-                onPress={() => {
-                    this.props.navigation.navigate('GankWeb', {gankBean: gankBean})
-                }}>
-                <View style={{backgroundColor: 'white'}}>
-                    <View style={{flexDirection: 'row', justifyContent: 'center', height: 80}}>
-                        <View style={{flex: 1, flexDirection: 'column', margin: 10}}>
-                            <Text numberOfLines={2} style={{color: 'black', fontSize: 14}}>{gankBean.desc}</Text>
-                            <Text style={{
-                                flex: 2, color: '#808084', fontSize: 12, marginTop: 10
-                            }}>{gankBean.who + ' • ' + StringUtil.getPublishedTimeSpan(gankBean.publishedAt)}</Text>
-                        </View>
-                        {
-                            gankBean.images !== undefined && gankBean.images.length > 0 ?
-                                <Image style={{margin: 8, width: 80}} source={{uri: gankBean.images[0]}}/> : <View/>
-                        }
-                    </View>
-                    <Divider style={{height: onePx, backgroundColor: '#cecece'}}/>
-                </View>
-            </TouchableNativeFeedback>
-        )
-    }
-
     render() {
         return (
             <View style={{flex: 1, alignItems: 'stretch'}}>

@@ -32,9 +32,9 @@ const gankType = {
     all: "all"
 };
 const FETCH_COUNT = 20;
-const onePx = 1 / PixelRatio.get()
+import GankItemRow from "../components/GankItemRow"
 
-export default class gankListScreen extends Component<{}> {
+export default class GankListIOSScreen extends Component<{}> {
 
 
     constructor(props) {
@@ -42,6 +42,8 @@ export default class gankListScreen extends Component<{}> {
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.loadMoreEnd = false;
         this.page = 1;
+        this.gankType = gankType.iOS
+
         this.state = {
             dataSource: ds,
             data: [],
@@ -49,37 +51,12 @@ export default class gankListScreen extends Component<{}> {
         this._getGanks(this.page)
     }
 
-    renderRow(rowData, rowId) {
-        return (
-            <TouchableOpacity activeOpacity={1} style={{alignItems: 'center', justifyContent: 'center', height: 220}}
-                              onPress={() => {
-                                  this.props.navigation.navigate('GankDaily', {gankBean: rowData,transition:'forFadeFromBottom'})
-                              }}>
-                <View style={{
-                    height: onePx, position: 'absolute', bottom: 0, right: 0, left: 0, backgroundColor: 'black'
-                }}/>
-
-                <Image style={{position: 'absolute', left: 0, top: 0, bottom: onePx, right: 0}}
-                       source={{uri: rowData.url}}/>
-                <View style={{
-                    position: 'absolute', left: 0, right: 0, bottom: onePx, top: 0, backgroundColor: 'rgba(0,0,0,0.15)'
-                }}/>
-                <Text style={{
-                    color: 'white', fontSize: 27, fontWeight: 'bold', textAlign: 'center'
-                }}>{rowData.who + ' • ' + StringUtil.getPublishedTimeSpan(rowData.publishedAt)}</Text>
-                <Text style={{
-                    margin: 10, color: 'white', fontSize: 16, textAlign: 'center'
-                }}>{rowData.desc}</Text>
-            </TouchableOpacity>
-        )
-    }
-
     render() {
         return (
             <View style={styles.container}>
                 <ListView
                     dataSource={this.state.dataSource.cloneWithRows(this.state.data)}
-                    renderRow={(rowData, sectionId, rowId) => this.renderRow(rowData, rowId)}
+                    renderRow={(rowData, sectionId, rowId) => <GankItemRow navigation={this.props.navigation} gankBean={rowData}/>}
                     showsVerticalScrollIndicator={false}
                     enableEmptySections={true}
                     onEndReached={this._toEnd.bind(this)}
@@ -100,22 +77,7 @@ export default class gankListScreen extends Component<{}> {
     }
 
     _getGanks(page) {
-        var p1 = this._getApiGanks(gankType.FuLi, page);
-        var p2 = this._getApiGanks(gankType.rest, page);
-        Promise.all([p1, p2])
-            .then(
-                lists => {
-                    var list1 = JSON.parse(lists[0]).results;
-                    var list2 = JSON.parse(lists[1]).results;
-                    var listRes = [];
-                    list1.forEach((v, i) => {
-                        var p2Bean = list2[i];
-                        v.desc = p2Bean.desc;
-                        v.who = p2Bean.who;
-                        listRes.push(v)
-                    });
-                    return list1
-                })
+        var p1 = this._getApiGanks(this.gankType, page).then(res => JSON.parse(res).results)
             .then(
                 list => {
                     if (page === 1)
